@@ -26,4 +26,11 @@ class User(db.Model):
         db.DateTime,
         server_default = db.func.now()
     )
+    
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "email": self.email
+        }
 
