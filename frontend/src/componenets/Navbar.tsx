@@ -21,28 +21,22 @@ const Navbar = () => {
         router.push("/");
     };
 
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [user, setUser] = useState<any>(null);
+
     useEffect(() => {
-        const loadUser = async () => {
+        const getUser = async () => {
+            const { data } = await supabase.auth.getUser();
+            setUser(data.user);
+        };
 
-            // getting current user
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
+        getUser();
+    }, [])
 
-            console.log("user", user);
-
-            if (!user) return;
-
-            const dbUser = await syncUser(
-                user.user_metadata.full_name,
-                user.email ?? "",
-            );
-
-            setCurrentUser(dbUser);
-            loadUser();
-        }
-    }, [currentUser, setCurrentUser]);
+    const displayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.email?.split("@")[0] ||
+    "Guest";
 
     const navLinks = [
         {
@@ -93,7 +87,7 @@ const Navbar = () => {
                 {/* Right Section */}
                 <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-600">
-                        {currentUser?.name}
+                        {displayName}
                     </span>
 
                     {!isAuthPage && <button
