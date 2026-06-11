@@ -42,7 +42,7 @@ const Navbar = () => {
             setCurrentUser(dbUser);
             loadUser();
         }
-    }, []);
+    }, [currentUser, setCurrentUser]);
 
     const navLinks = [
         {
