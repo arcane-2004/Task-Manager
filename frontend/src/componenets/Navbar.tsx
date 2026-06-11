@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { LogOut } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
-import { syncUser } from '@/lib/api';
-import { User } from '@/types/user';
+import { CircleUserRound } from 'lucide-react';
 
 const Navbar = () => {
 
@@ -33,10 +32,10 @@ const Navbar = () => {
     }, [])
 
     const displayName =
-    user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split("@")[0] ||
-    "Guest";
+        user?.user_metadata?.full_name ||
+        user?.user_metadata?.name ||
+        user?.email?.split("@")[0] ||
+        "Guest";
 
     const navLinks = [
         {
@@ -86,8 +85,10 @@ const Navbar = () => {
 
                 {/* Right Section */}
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-slate-600">
-                        {displayName}
+                    <span className="text-sm text-slate-600 flex items-center justify-center gap-2.5">
+                        <h2>{displayName}</h2>
+
+                        <CircleUserRound />
                     </span>
 
                     {!isAuthPage && <button
