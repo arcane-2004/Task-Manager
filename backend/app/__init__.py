@@ -11,13 +11,11 @@ from flask_cors import CORS
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_object(Config)
-    
-    CORS(
-        app,
-        resources={r"/*": {"origins": "http://localhost:3001"}},
-        supports_credentials=True
+
+    CORS(app, 
+         origins=["http://localhost:3001"],
     )
+    app.config.from_object(Config)
 
     db.init_app(app)     
     migrate.init_app(app, db)

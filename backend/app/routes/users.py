@@ -6,7 +6,7 @@ from app.models import User
 user_bp = Blueprint("users", __name__)
 
 
-@user_bp.route("/users", methods=["POST", "OPTIONS"])
+@user_bp.route("/users", methods=["POST"])
 def create_user():
     data = request.get_json()
 
@@ -26,7 +26,7 @@ def get_users():
     return jsonify([user.to_dict() for user in users]), 200
 
 
-@user_bp.route("/users/sync", methods=["POST", "OPTIONS"])
+@user_bp.route("/users/sync", methods=["POST"])
 def sync_user():
     data = request.get_json()
     
