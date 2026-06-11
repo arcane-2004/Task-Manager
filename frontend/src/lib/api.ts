@@ -57,20 +57,6 @@ export const createTask = async (taskData: {
   return response.json();
 };
 
-// mark task as completed
-// export async function completeTask(
-//   taskId: string
-// ) {
-//   const response = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}/complete`,
-//     {
-//       method: "PATCH",
-//     }
-//   );
-
-//   return response.json();
-// }
-
 
 // update task status
 export const updateTaskStatus = async (taskId: string, status: string) => {

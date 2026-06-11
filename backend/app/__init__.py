@@ -13,7 +13,9 @@ def create_app():
 
 
     CORS(app, 
-         origins=["http://localhost:3001"],
+         origins=["http://localhost:3001",
+                  "https://task-manager-rm82.onrender.com"
+                  ],
     )
     app.config.from_object(Config)
 
