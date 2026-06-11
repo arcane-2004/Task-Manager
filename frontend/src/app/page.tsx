@@ -28,7 +28,7 @@ const LandingPage = () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3001"
+        redirectTo: "task-manager-chi-gold-91.vercel.app"
       }
     });
   }
