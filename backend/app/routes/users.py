@@ -28,7 +28,7 @@ def get_users():
 
 @user_bp.route("/users/sync", methods=["POST"])
 def sync_user():
-    data = request.get_json
+    data = request.get_json()
     
     user = User.query.filter_by(email=data["email"]).first()
     
