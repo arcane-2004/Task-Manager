@@ -1,7 +1,7 @@
 "use client"
 import CreateTaskForm from '@/componenets/CreateTaskForm'
 import TaskCard from '@/componenets/TaskCard';
-import { completeTask, getTasks, getUsers, syncUser } from '@/lib/api';
+import {  getTasks, getUsers, syncUser } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { Task } from '@/types/task';
 import { User } from '@/types/user';
@@ -95,18 +95,18 @@ const DashboardPage = () => {
         { title: "Pending", value: pendingTasks.length }
     ];
 
-    const handleCompleteTask = async (
-        taskId: string
-    ) => {
-        const res = await completeTask(taskId);
-        if (res.status === "ok") {
-            toast.success(res.message)
-        }
+    // const handleCompleteTask = async (
+    //     taskId: string
+    // ) => {
+    //     const res = await completeTask(taskId);
+    //     if (res.status === "ok") {
+    //         toast.success(res.message)
+    //     }
 
-        const updatedTasks = await getTasks();
+    //     const updatedTasks = await getTasks();
 
-        setTasks(updatedTasks);
-    };
+    //     setTasks(updatedTasks);
+    // };
 
     return (
         <main className="min-h-screen bg-slate-50">
@@ -149,55 +149,60 @@ const DashboardPage = () => {
                     <CreateTaskForm
                         users={users}
                         currentUser={currentUser}
+                        setTasks={setTasks}
                     />
 
                 </section>
 
                 {/* Assigned Tasks Section */}
+                <div className='grid grid-cols-2 gap-3'>
+                    <section className="rounded-lg border border-slate-200 bg-white p-6">
+                        <h2 className="mb-4 text-xl font-semibold">
+                            Assigned To Me
+                        </h2>
 
-                <section className="mb-8 rounded-lg border border-slate-200 bg-white p-6">
-                    <h2 className="mb-4 text-xl font-semibold">
-                        Assigned To Me
-                    </h2>
+                        <div className="h-[60vh] overflow-y-auto rounded-xl bg-white p-2">
+                            {assignedTasks.length === 0 ? (
+                                <p className="text-sm text-gray-500">No tasks assigned</p>
+                            ) : (
+                                <div className="space-y-3">
+                                    {assignedTasks.map((task) => (
+                                        <TaskCard
+                                            key={task.id}
+                                            task={task}
+                                            setTasks={setTasks}
+                                            currentUser={currentUser}    
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
-                    {
-                        assignedTasks.length === 0 ? (
-                            <div className="rounded-lg border border-slate-200 bg-white p-6 text-center text-slate-500">
-                                No tasks assigned to you.
-                            </div>
-                        ) : (
-                            assignedTasks.map((task) => (
-                                <TaskCard
-                                    key={task.id}
-                                    task={task}
-                                    onComplete={handleCompleteTask}
-                                    assignedToMe={true}
-                                />
-                            ))
-                        )
-                    }
+                    </section>
 
-                </section>
+                    {/* Created Tasks Section */}
+                    <section className='rounded-lg border border-slate-200 bg-white p-6'>
+                        <h2 className="mb-4 text-xl font-semibold">
+                            Created By Me
+                        </h2>
 
-                {/* Created Tasks Section */}
-                <section className='rounded-lg border border-slate-200 bg-white p-6'>
-                    <h2 className="mb-4 text-xl font-semibold">
-                        Created By Me
-                    </h2>
-
-                    {
-                        createdTasks.length === 0 ? (
-                            <div className="rounded-lg border border-slate-200 bg-white p-6 text-center text-slate-500">
-                                No tasks assigned to you.
-                            </div>
-                        ) : (
-                            createdTasks.map((task) => (
-                                <TaskCard key={task.id} task={task} />
-                            ))
-                        )
-                    }
-                </section>
-
+                        <div className="h-[60vh] overflow-y-auto rounded-xl  bg-white p-2">
+                            {createdTasks.length === 0 ? (
+                                <p className="text-sm text-gray-500">No tasks created</p>
+                            ) : (
+                                <div className="space-y-3">
+                                    {createdTasks.map((task) => (
+                                        <TaskCard 
+                                        key={task.id} 
+                                        task={task} 
+                                        setTasks={setTasks}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
     )

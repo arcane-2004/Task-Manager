@@ -1,22 +1,37 @@
+"use client"
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { LogOut } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useRouter,usePathname  } from 'next/navigation';
 
 const Navbar = () => {
+
+    const router = useRouter()
+    const pathname = usePathname();
+    const isAuthPage = pathname === "/";
+
+    const [loading, setLoading] = useState(false);
+
+    const handleLogout = async () => {
+        setLoading(true);
+        await supabase.auth.signOut();
+        router.push("/");
+    };
 
     const navLinks = [
         {
             label: "Dashboard",
             href: "/dashboard",
         },
-        {
-            label: "My Tasks",
-            href: "/tasks",
-        },
-        {
-            label: "Create Task",
-            href: "/tasks/create",
-        },
+        // {
+        //     label: "My Tasks",
+        //     href: "/tasks",
+        // },
+        // {
+        //     label: "Create Task",
+        //     href: "/tasks/create",
+        // },
     ];
 
     return (
@@ -56,13 +71,15 @@ const Navbar = () => {
                         Sumit Kumar
                     </span>
 
-                    <button
+                    {!isAuthPage && <button
                         className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 flex items-center justify-center gap-2 cursor-pointer"
+                        onClick={handleLogout}
+                        disabled={loading}
                     >
-                        <h2>Logout</h2>
-                        <span><LogOut/></span>
+                        <h2>{loading ? "Logging out..." : "Logout"}</h2>
+                        <span><LogOut /></span>
 
-                    </button>
+                    </button>}
                 </div>
             </div>
         </header>

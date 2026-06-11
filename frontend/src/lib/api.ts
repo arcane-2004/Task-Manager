@@ -1,4 +1,4 @@
-// login and signin
+// login and signup
 export const syncUser = async (name: string, email: string) => {
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/sync`, {
@@ -58,15 +58,29 @@ export const createTask = async (taskData: {
 };
 
 // mark task as completed
-export async function completeTask(
-  taskId: string
-) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}/complete`,
-    {
-      method: "PATCH",
-    }
-  );
+// export async function completeTask(
+//   taskId: string
+// ) {
+//   const response = await fetch(
+//     `${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}/complete`,
+//     {
+//       method: "PATCH",
+//     }
+//   );
 
-  return response.json();
-}
+//   return response.json();
+// }
+
+
+// update task status
+export const updateTaskStatus = async (taskId: string, status: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskId}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  return res.json();
+};

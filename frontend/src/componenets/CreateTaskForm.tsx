@@ -1,46 +1,58 @@
 "use client"
 import { createTask } from '@/lib/api';
+import { Task } from '@/types/task';
 import { User } from '@/types/user';
-import React, { useState } from 'react'
+import React, { useState, Dispatch, SetStateAction } from 'react'
 import toast from "react-hot-toast";
+import { LoaderCircle } from 'lucide-react';
 
 interface CreateTaskFormProps {
     users: User[];
+    setTasks: Dispatch<SetStateAction<Task[]>>;
     currentUser: User | null;
 }
 
-const CreateTaskForm = ({ users, currentUser }: CreateTaskFormProps) => {
+const CreateTaskForm = ({ users, setTasks, currentUser }: CreateTaskFormProps) => {
 
 
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [assignedTo, setAssignedTo] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(currentUser)
-        if (!currentUser) return;
 
-        const taskData = {
-            title,
-            description,
-            assigned_to: assignedTo,
-            created_by: currentUser.id,
-        };
+        if (loading) return;
 
-        const res = await createTask(taskData);
-        console.log("res", res.status)
+        setLoading(true);
 
-        if(res.status == "ok"){
-            toast.success(res.message)
+        if (!currentUser?.id) return;
+        try {
+            const res = await createTask({
+                title,
+                description,
+                assigned_to: assignedTo,
+                created_by: currentUser?.id,
+            });
+
+            // ✅ instant UI update (if parent manages tasks)
+            if (setTasks) {
+                setTasks((prev: Task[]) => [res, ...prev]);
+            }
+
+            if (res.status === "ok") {
+                toast(res.message)
+            }
+
+            // reset form
+            setTitle("");
+            setDescription("");
+            setAssignedTo("");
+        } finally {
+            setLoading(false);
         }
-
-        setTitle("")
-        setDescription("")
-        setAssignedTo("")
     };
 
     return (
@@ -118,10 +130,21 @@ const CreateTaskForm = ({ users, currentUser }: CreateTaskFormProps) => {
                 {/* Submit */}
                 <button
                     type="submit"
-                    className="rounded-lg bg-purple-600 px-5 py-2.5 font-medium text-white hover:bg-purple-700 cursor-pointer"
-
+                    disabled={loading}
+                    className={`rounded-lg px-5 py-2.5 font-medium text-white transition
+                        ${loading
+                            ? "bg-purple-300 cursor-not-allowed"
+                            : "bg-purple-600 hover:bg-purple-700"
+                        }`}
                 >
-                    Create Task
+                    {loading ? (
+                        <span className="flex items-center gap-2">
+                            Creating
+                            <LoaderCircle className="animate-spin" />
+                        </span>
+                    ) : (
+                        "Create Task"
+                    )}
                 </button>
             </form>
         </div>

@@ -69,70 +69,47 @@ def get_tasks():
     return jsonify(result), 200
 
 
-@task_bp.route("/tasks/<task_id>/complete", methods=["PATCH"])
-def complete_task(task_id):
-    task = db.session.get(Task, task_id)
+
+@task_bp.route("/tasks/<task_id>/status", methods=["PATCH"])
+def update_status(task_id):
+    data = request.json
+
+    task = Task.query.get(task_id)
 
     if not task:
-        return jsonify({
-            "error": "Task not found"
-        }), 404
-    
-    task.status = "completed"
-    
+        return {"error": "Task not found"}, 404
+
+    old_status = task.status
+    task.status = data["status"]
+
     db.session.commit()
-    
-    createdBy_user = User.query.get(task.created_by)
 
-    if createdBy_user:
-        send_email(
-            to=createdBy_user.email,
-            subject="Task Completed",
-            body = f"""
-            Hello {createdBy_user.name},
+    # 🔥 EMAIL ONLY WHEN COMPLETED
+    if data["status"] == "completed" and old_status != "completed":
+        creator = User.query.get(task.created_by)
 
-            Task assigned by you to has been marked completed.
+        if creator:
+            send_email(
+                to=creator.email,
+                subject="Task Completed",
+                body = f"""
+                Hello {creator.name},
 
-            Title: {task.title}
+                Task assigned by you to has been marked completed.
 
-            Description:
-            {task.description}
+                Title: {task.title}
 
-            Please login to Task Manager to view details.
+                Description:
+                {task.description}
 
-            Regards,
-            Task Manager
-            """
-        )
-        
+                Please login to Task Manager to view details.
+
+                Regards,
+                Task Manager
+                """
+            )
+
     return jsonify({
         "status" : "ok",
-        "message": "Task completed successfully"
+        "message": "status updated"
     }), 200
-    
-
-@task_bp.route("/test-email")
-def test_email():
-
-    send_email(
-        "ghostsumit153@gmail.com",
-        "Task Manager Test",
-        "Email is working"
-    )
-
-    return {
-        "message": "sent"
-    }
-
-
-@task_bp.route("/debug-mail")
-def debug_mail():
-    from flask import current_app
-
-    return {
-        "username": current_app.config["MAIL_USERNAME"],
-        "password_exists": bool(current_app.config["MAIL_PASSWORD"]),
-        "server": current_app.config["MAIL_SERVER"],
-        "port": current_app.config["MAIL_PORT"],
-        "tls": current_app.config["MAIL_USE_TLS"],
-    }

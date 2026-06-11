@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React from 'react'
 import { useRouter } from "next/navigation";
-import { useEffect,} from "react";
+import { useEffect, } from "react";
 import { supabase } from "@/lib/supabase";
 
 
@@ -23,6 +23,15 @@ const LandingPage = () => {
 
     checkAuth();
   }, []);
+
+  const handleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:3001"
+      }
+    });
+  }
 
   const features = [
     {
@@ -57,7 +66,7 @@ const LandingPage = () => {
         </p>
 
         <button
-          // onClick={handleLogin}
+          onClick={handleLogin}
           className="mt-8 flex items-center justify-center gap-4 rounded-lg bg-purple-600 ring-2 ring-purple-700 px-6 py-3 font-medium text-white transition hover:bg-purple-700 cursor-pointer"
         >
           <span className='relative h-10'>
