@@ -14,7 +14,7 @@ def create_app():
 
     CORS(app, 
          origins=["http://localhost:3001",
-                  "https://task-manager-rm82.onrender.com"
+                  "task-manager-chi-gold-91.vercel.app"
                   ],
     )
     app.config.from_object(Config)
