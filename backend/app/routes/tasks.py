@@ -6,7 +6,7 @@ from app.models import User
 
 task_bp = Blueprint("tasks", __name__)
 
-@task_bp.route("/tasks", methods=["POST"])
+@task_bp.route("/tasks", methods=["POST", "OPTIONS"])
 def create_task():
     data = request.get_json()
     
@@ -49,7 +49,7 @@ def create_task():
     }), 201
 
 
-@task_bp.route("/tasks", methods=["GET"])
+@task_bp.route("/tasks", methods=["GET", "OPTIONS"])
 def get_tasks():
     tasks = Task.query.all()
 
@@ -70,7 +70,7 @@ def get_tasks():
 
 
 
-@task_bp.route("/tasks/<task_id>/status", methods=["PATCH"])
+@task_bp.route("/tasks/<task_id>/status", methods=["PATCH", "OPTIONS"])
 def update_status(task_id):
     data = request.json
 
