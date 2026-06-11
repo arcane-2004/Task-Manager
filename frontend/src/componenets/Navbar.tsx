@@ -1,9 +1,11 @@
 "use client"
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LogOut } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useRouter,usePathname  } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { syncUser } from '@/lib/api';
+import { User } from '@/types/user';
 
 const Navbar = () => {
 
@@ -18,6 +20,29 @@ const Navbar = () => {
         await supabase.auth.signOut();
         router.push("/");
     };
+
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    useEffect(() => {
+        const loadUser = async () => {
+
+            // getting current user
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+
+            console.log("user", user);
+
+            if (!user) return;
+
+            const dbUser = await syncUser(
+                user.user_metadata.full_name,
+                user.email ?? "",
+            );
+
+            setCurrentUser(dbUser);
+            loadUser();
+        }
+    }, []);
 
     const navLinks = [
         {
@@ -68,7 +93,7 @@ const Navbar = () => {
                 {/* Right Section */}
                 <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-600">
-                        Sumit Kumar
+                        {currentUser?.name}
                     </span>
 
                     {!isAuthPage && <button
