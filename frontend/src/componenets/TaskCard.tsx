@@ -8,10 +8,11 @@ interface TaskCardProps {
     task: Task;
     setTasks: Dispatch<SetStateAction<Task[]>>;
     currentUser?: User | null;
+    assignedToName?: string
 }
 
 
-export default function TaskCard({ task, setTasks, currentUser }: TaskCardProps) {
+export default function TaskCard({ task, setTasks, currentUser, assignedToName }: TaskCardProps) {
 
     const [loadingStatus, setLoadingStatus] = useState(false);
 

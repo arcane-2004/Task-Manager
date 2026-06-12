@@ -1,7 +1,7 @@
 "use client"
 import CreateTaskForm from '@/componenets/CreateTaskForm'
 import TaskCard from '@/componenets/TaskCard';
-import {  getTasks, getUsers, syncUser } from '@/lib/api';
+import { getTasks, getUsers, syncUser } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { Task } from '@/types/task';
 import { User } from '@/types/user';
@@ -166,14 +166,29 @@ const DashboardPage = () => {
                                 <p className="text-sm text-gray-500">No tasks assigned</p>
                             ) : (
                                 <div className="space-y-3">
-                                    {assignedTasks.map((task) => (
+                                    {tasks.map((task) => {
+                                        const assignedUser = users.find(
+                                            (user) => user.id === task.assigned_to
+                                        );
+
+                                        return (
+                                            <TaskCard
+                                                key={task.id}
+                                                task={task}
+                                                setTasks={setTasks}
+                                                currentUser={currentUser}
+                                                assignedToName={assignedUser?.name || "Unassigned"}
+                                            />
+                                        );
+                                    })}
+                                    {/* {assignedTasks.map((task) => (
                                         <TaskCard
                                             key={task.id}
                                             task={task}
                                             setTasks={setTasks}
-                                            currentUser={currentUser}    
+                                            currentUser={currentUser}
                                         />
-                                    ))}
+                                    ))} */}
                                 </div>
                             )}
                         </div>
@@ -192,10 +207,10 @@ const DashboardPage = () => {
                             ) : (
                                 <div className="space-y-3">
                                     {createdTasks.map((task) => (
-                                        <TaskCard 
-                                        key={task.id} 
-                                        task={task} 
-                                        setTasks={setTasks}
+                                        <TaskCard
+                                            key={task.id}
+                                            task={task}
+                                            setTasks={setTasks}
                                         />
                                     ))}
                                 </div>
