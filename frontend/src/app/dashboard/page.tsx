@@ -1,6 +1,7 @@
 "use client"
 import CreateTaskForm from '@/componenets/CreateTaskForm'
 import TaskCard from '@/componenets/TaskCard';
+import TaskDetailsModal from '@/componenets/TaskDetailsModal';
 import { getTasks, getUsers, syncUser } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { Task } from '@/types/task';
@@ -12,6 +13,8 @@ const DashboardPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const loadUser = async () => {
@@ -178,6 +181,10 @@ const DashboardPage = () => {
                                                 setTasks={setTasks}
                                                 currentUser={currentUser}
                                                 createdByName={creatorUser?.name || "Unassigned"}
+                                                onClick={() => {
+                                                    setSelectedTask(task);
+                                                    setIsModalOpen(true);
+                                                }}
                                             />
                                         );
                                     })}
@@ -209,6 +216,10 @@ const DashboardPage = () => {
                                                 task={task}
                                                 setTasks={setTasks}
                                                 assignedToName={assignedUser?.name || "Unassigned"}
+                                                onClick={() => {
+                                                    setSelectedTask(task);
+                                                    setIsModalOpen(true);
+                                                }}
                                             />
                                         );
                                     })}
@@ -218,6 +229,15 @@ const DashboardPage = () => {
                     </section>
                 </div>
             </div>
+            <TaskDetailsModal
+                task={selectedTask}
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setSelectedTask(null);
+                    setIsModalOpen(false);
+                }}
+                users={users}
+            />
         </main>
     )
 }

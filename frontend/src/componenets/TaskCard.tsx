@@ -10,10 +10,11 @@ interface TaskCardProps {
     currentUser?: User | null;
     assignedToName?: string;
     createdByName?: string;
+    onClick?: () => void;
 }
 
 
-export default function TaskCard({ task, setTasks, currentUser, assignedToName, createdByName }: TaskCardProps) {
+export default function TaskCard({ task, setTasks, currentUser, assignedToName, createdByName, onClick }: TaskCardProps) {
 
     const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -44,7 +45,7 @@ export default function TaskCard({ task, setTasks, currentUser, assignedToName, 
         task.assigned_to === currentUser?.id && task.status !== "completed" && !loadingStatus;
 
     return (
-        <div className="rounded-lg border border-slate-200 bg-white p-5 mb-2">
+        <div className="cursor-pointer rounded-lg border border-slate-200 bg-white p-5 mb-2 transition hover:shadow-lg" onClick={onClick}>
             <div className="flex items-start justify-between">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">
