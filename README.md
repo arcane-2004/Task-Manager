@@ -8,7 +8,7 @@ Built using **Next.js (Frontend)**, **Flask (Backend)**, **Supabase (Auth + DB)*
 
 ## 🚀 Live Demo
 
-- 🌐 Frontend: https://task-manager-chi-gold-91.vercel.app/dashboard
+- 🌐 Frontend: https://task-manager-chi-gold-91.vercel.app
 - ⚙️ Backend API: https://task-manager-rm82.onrender.com
 
 ---
