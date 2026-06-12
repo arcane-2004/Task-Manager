@@ -167,8 +167,8 @@ const DashboardPage = () => {
                             ) : (
                                 <div className="space-y-3">
                                     {assignedTasks.map((task) => {
-                                        const assignedUser = users.find(
-                                            (user) => user.id === task.assigned_to
+                                        const creatorUser = users.find(
+                                            (user) => user.id === task.created_by
                                         );
 
                                         return (
@@ -177,18 +177,10 @@ const DashboardPage = () => {
                                                 task={task}
                                                 setTasks={setTasks}
                                                 currentUser={currentUser}
-                                                assignedToName={assignedUser?.name || "Unassigned"}
+                                                createdByName={creatorUser?.name || "Unassigned"}
                                             />
                                         );
                                     })}
-                                    {/* {assignedTasks.map((task) => (
-                                        <TaskCard
-                                            key={task.id}
-                                            task={task}
-                                            setTasks={setTasks}
-                                            currentUser={currentUser}
-                                        />
-                                    ))} */}
                                 </div>
                             )}
                         </div>
@@ -206,13 +198,20 @@ const DashboardPage = () => {
                                 <p className="text-sm text-gray-500">No tasks created</p>
                             ) : (
                                 <div className="space-y-3">
-                                    {createdTasks.map((task) => (
-                                        <TaskCard
-                                            key={task.id}
-                                            task={task}
-                                            setTasks={setTasks}
-                                        />
-                                    ))}
+                                    {createdTasks.map((task) => {
+                                        const assignedUser = users.find(
+                                            (user) => user.id === task.assigned_to
+                                        );
+
+                                        return (
+                                            <TaskCard
+                                                key={task.id}
+                                                task={task}
+                                                setTasks={setTasks}
+                                                assignedToName={assignedUser?.name || "Unassigned"}
+                                            />
+                                        );
+                                    })}
                                 </div>
                             )}
                         </div>

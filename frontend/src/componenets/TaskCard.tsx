@@ -8,11 +8,12 @@ interface TaskCardProps {
     task: Task;
     setTasks: Dispatch<SetStateAction<Task[]>>;
     currentUser?: User | null;
-    assignedToName?: string
+    assignedToName?: string;
+    createdByName?: string;
 }
 
 
-export default function TaskCard({ task, setTasks, currentUser, assignedToName }: TaskCardProps) {
+export default function TaskCard({ task, setTasks, currentUser, assignedToName, createdByName }: TaskCardProps) {
 
     const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -51,8 +52,12 @@ export default function TaskCard({ task, setTasks, currentUser, assignedToName }
                     </h3>
 
                     <div className="mt-2 text-sm text-gray-600">
-                        <span className="font-medium">Assigned To:</span>{" "}
-                        {assignedToName}
+                        <span className="font-medium">
+                            {assignedToName
+                                ? `Assigned to: ${assignedToName}`
+                                : `Assigned by: ${createdByName}`
+                            }
+                        </span>
                     </div>
                 </div>
 
