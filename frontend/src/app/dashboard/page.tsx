@@ -166,7 +166,7 @@ const DashboardPage = () => {
                                 <p className="text-sm text-gray-500">No tasks assigned</p>
                             ) : (
                                 <div className="space-y-3">
-                                    {tasks.map((task) => {
+                                    {assignedTasks.map((task) => {
                                         const assignedUser = users.find(
                                             (user) => user.id === task.assigned_to
                                         );

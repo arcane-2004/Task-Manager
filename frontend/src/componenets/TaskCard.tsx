@@ -50,9 +50,10 @@ export default function TaskCard({ task, setTasks, currentUser, assignedToName }
                         {task.title}
                     </h3>
 
-                    <p className="mt-2 text-sm text-slate-600">
-                        {task.description}
-                    </p>
+                    <div className="mt-2 text-sm text-gray-600">
+                        <span className="font-medium">Assigned To:</span>{" "}
+                        {assignedToName}
+                    </div>
                 </div>
 
                 <div>
